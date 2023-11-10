@@ -1,1 +1,0 @@
-This section contains client side of the project
