@@ -8,6 +8,10 @@ import com.delivery.delivery.entity.DeliveryPerson;
 import com.delivery.delivery.service.DeliveryPersonService;
 import com.delivery.delivery.service.DeliveryService;
 import com.delivery.delivery.service.DeliveryServiceImpl;
+
+import com.order.order.dto.ItemMsgDto;
+import com.order.order.dto.OrderDto;
+import com.order.order.util.VarList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +22,28 @@ import org.springframework.web.bind.annotation.*;
 public class DeliveryController {
 
 
-    @Autowired
-    private DeliveryServiceImpl deliveryServiceImpl;
 
-    @Autowired
-    private DeliveryPersonService deliveryPersonService;
+        @Autowired
+        private DeliveryServiceImpl deliveryServiceImpl;
 
-    @Autowired
-    private DeliveryService deliveryService;
+        @Autowired
+        private DeliveryPersonService deliveryPersonService;
 
-    @PostMapping("/addDeliveryPerson")
-    public ResponseEntity<DeliveryPerson> addDeliveryPerson(@RequestBody DeliveryPersonDto deliveryPersonDto) {
-    DeliveryPerson newDeliveryPerson = deliveryPersonService.saveDeliveryPerson(deliveryPersonDto);
-    return new ResponseEntity<>(newDeliveryPerson, HttpStatus.CREATED);
-    }
+        @PostMapping("/addDeliveryPerson")
+        public ResponseEntity<DeliveryPerson> addDeliveryPerson(@RequestBody DeliveryPersonDto deliveryPersonDto) {
+            DeliveryPerson newDeliveryPerson = deliveryPersonService.saveDeliveryPerson(deliveryPersonDto);
+            return new ResponseEntity<>(newDeliveryPerson, HttpStatus.CREATED);
+        }
 
+        // Other controller methods...
 
         @GetMapping("/getAvailability/{dp_id}")
         public ResponseEntity<String> getAvailability(@PathVariable Long dp_id) {
             String availability = deliveryPersonService.getAvailabilityById(dp_id);
             return new ResponseEntity<>(availability, HttpStatus.OK);
         }
+
+
     @PostMapping("/updateAvailability/{dp_id}/{newAvailability}")
     public ResponseEntity<String> updateAvailability(@PathVariable Long dp_id, @PathVariable String newAvailability) {
         deliveryPersonService.updateAvailability(dp_id, newAvailability);
@@ -46,11 +51,15 @@ public class DeliveryController {
     }
 
 
-    @PostMapping("/assignDelivery/{dp_id}/{orderID}")
-    public ResponseEntity<Delivery> assignDelivery(@PathVariable Long dp_id, @PathVariable Long orderID) {
-        Delivery assignedDelivery = deliveryService.assignDelivery(dp_id, orderID);
-        return new ResponseEntity<>(assignedDelivery, HttpStatus.CREATED);
-    }
+//    @PostMapping("/assignDelivery/{dp_id}/{orderID}")
+//    public ResponseEntity<Delivery> assignDelivery(@PathVariable Long dp_id, @PathVariable Long orderID) {
+//        Delivery assignedDelivery = deliveryService.assignDelivery(dp_id, orderID);
+//        return new ResponseEntity<>(assignedDelivery, HttpStatus.CREATED);
+//    }
+
+
+
+
     }
 
 

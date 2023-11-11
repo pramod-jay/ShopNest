@@ -19,4 +19,7 @@ public interface DeliveryPersonService {
 
 
     void updateAvailability(Long dp_id, String newAvailability);
+
+
+    
 }
