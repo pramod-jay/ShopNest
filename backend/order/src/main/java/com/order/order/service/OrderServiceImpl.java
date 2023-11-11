@@ -82,13 +82,6 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderDto getOrderById(Long orderID) {
-        // Check if the order with the given ID exists
-        Order order = orderRepository.findById(orderID)
-                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderID));
-
-        // Map the Order entity to OrderDto using ModelMapper
-        OrderDto orderDto = modelMapper.map(order, OrderDto.class);
-
-        return orderDto;
+        return null;
     }
 }
