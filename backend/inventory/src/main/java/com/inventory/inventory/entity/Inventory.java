@@ -23,4 +23,6 @@ public class Inventory {
     private String manufacturer;
     private String specifications;
     private Integer quantity;
+
+
 }
