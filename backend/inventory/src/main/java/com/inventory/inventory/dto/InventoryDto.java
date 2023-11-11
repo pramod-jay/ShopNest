@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class InventoryDto {
     private Long item_id;
     private String item_name;
-    private BigDecimal price;
+    private Double price;
     private String manufacturer;
     private String specifications;
     private Integer quantity;
