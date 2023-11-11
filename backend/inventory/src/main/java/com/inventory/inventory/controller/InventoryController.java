@@ -1,6 +1,7 @@
 package com.inventory.inventory.controller;
 
 import com.inventory.inventory.dto.InventoryDto;
+import com.inventory.inventory.dto.ItemNamePriceDto;
 import com.inventory.inventory.dto.ResponseDto;
 import com.inventory.inventory.entity.Inventory;
 import com.inventory.inventory.service.InventoryServiceImpl;
@@ -146,6 +147,16 @@ public class InventoryController {
         responseDto.setCode(VarList.RSP_SUCCESS);
         responseDto.setMessage("Data Fetched");
         responseDto.setContent(inventoryList);
+        return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
+    }
+
+    //Fetch item name and price
+    @GetMapping(value = "/fetchItemNamePrice/{id}")
+    public ResponseEntity fetchItemNamePrice(@PathVariable(name = "id")Long id){
+        ItemNamePriceDto res = inventoryServiceImpl.fetchItemNamePrice(id);
+        responseDto.setCode(VarList.RSP_SUCCESS);
+        responseDto.setMessage("Data Fetched");
+        responseDto.setContent(res);
         return new ResponseEntity(responseDto, HttpStatus.ACCEPTED);
     }
 }

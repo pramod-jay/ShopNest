@@ -1,6 +1,7 @@
 package com.inventory.inventory.service;
 
 import com.inventory.inventory.dto.InventoryDto;
+import com.inventory.inventory.dto.ItemNamePriceDto;
 import com.inventory.inventory.entity.Inventory;
 import com.inventory.inventory.repository.InventoryRepository;
 import com.inventory.inventory.util.VarList;
@@ -8,7 +9,6 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -22,8 +22,11 @@ public class InventoryServiceImpl implements InventoryService{
     @Autowired
     private ModelMapper modelMapper;
 
+    ItemNamePriceDto itemNamePriceDto = new ItemNamePriceDto();
+
 
     //Insert item method
+    @Override
     public String addItem(InventoryDto inventoryDto){
         if(inventoryRepository.existsById(inventoryDto.getItem_id())){
             return VarList.RSP_DUPLICATED;
@@ -34,6 +37,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     //Update item method
+    @Override
     public String updateItem(InventoryDto inventoryDto){
         if(inventoryRepository.existsById(inventoryDto.getItem_id())){
             inventoryRepository.save(modelMapper.map(inventoryDto, Inventory.class));
@@ -44,6 +48,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     //Fetch item method
+    @Override
     public Inventory fetchItem(Long id){
         if(inventoryRepository.existsById(id)){
             return inventoryRepository.getReferenceById(id);
@@ -53,6 +58,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     //Delete item method
+    @Override
     public String deleteItem(Long id){
         if(inventoryRepository.existsById(id)){
             inventoryRepository.deleteById(id);
@@ -63,7 +69,17 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     //Fetch all items
+    @Override
     public List<Inventory> fetchAllItems(){
         return inventoryRepository.findAll();
+    }
+
+    //Fetch item name and price
+    @Override
+    public ItemNamePriceDto fetchItemNamePrice(Long id){
+        Inventory res=inventoryRepository.fetchItemNamePrice(id);
+        itemNamePriceDto.setItem_name(res.getItem_name());
+        itemNamePriceDto.setPrice(res.getPrice());
+        return itemNamePriceDto;
     }
 }
