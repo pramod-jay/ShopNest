@@ -1,6 +1,7 @@
 package com.inventory.inventory.service;
 
 import com.inventory.inventory.dto.InventoryDto;
+import com.inventory.inventory.dto.ItemNamePriceDto;
 import com.inventory.inventory.entity.Inventory;
 import org.springframework.stereotype.Service;
 
@@ -8,13 +9,15 @@ import java.util.List;
 
 @Service
 public interface InventoryService {
-    public String addItem(InventoryDto inventoryDto);
+    String addItem(InventoryDto inventoryDto);
 
-    public String updateItem(InventoryDto inventoryDto);
+    String updateItem(InventoryDto inventoryDto);
 
-    public Inventory fetchItem(Long id);
+    Inventory fetchItem(Long id);
 
-    public String deleteItem(Long id);
+    String deleteItem(Long id);
 
-    public List<Inventory> fetchAllItems();
+    List<Inventory> fetchAllItems();
+
+    ItemNamePriceDto fetchItemNamePrice(Long id);
 }
