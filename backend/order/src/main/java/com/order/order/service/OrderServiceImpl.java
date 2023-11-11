@@ -79,4 +79,9 @@ public class OrderServiceImpl implements OrderService{
             return itemMsgDto;
         }
     }
+
+    @Override
+    public OrderDto getOrderById(Long orderID) {
+        return null;
+    }
 }

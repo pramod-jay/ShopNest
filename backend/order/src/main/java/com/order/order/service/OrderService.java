@@ -10,5 +10,6 @@ import java.util.List;
 @Service
 public interface OrderService {
     public ItemMsgDto addOrder(OrderDto orderDto);
-
+    OrderDto getOrderById(Long orderID);
 }
+
