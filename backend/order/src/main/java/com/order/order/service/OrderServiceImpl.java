@@ -7,6 +7,7 @@ import com.order.order.repository.OrderRepository;
 import com.order.order.util.Uri;
 import com.order.order.util.VarList;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class OrderServiceImpl {
+public class OrderServiceImpl implements OrderService{
     @Autowired
     private OrderRepository orderRepository;
 
@@ -34,7 +35,7 @@ public class OrderServiceImpl {
 
     double total=0.0;
 
-    public ItemMsgDto addOrder(OrderDto orderDto) {
+    public ItemMsgDto addOrder(@NotNull OrderDto orderDto) {
 
         orderDto.setDate(LocalDate.now());
         orderDto.setTime(LocalTime.now());
