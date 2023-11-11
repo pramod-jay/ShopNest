@@ -10,11 +10,16 @@ import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,11 +35,13 @@ public class OrderServiceImpl implements OrderService{
     private RestTemplate restTemplate;
 
     final ItemMsgDto itemMsgDto = new ItemMsgDto();
+    final OrderMsgDto orderMsgDto = new OrderMsgDto();
 
     final Uri uri = new Uri();
 
     double total=0.0;
 
+    @Override
     public ItemMsgDto addOrder(@NotNull OrderDto orderDto) {
 
         orderDto.setDate(LocalDate.now());
@@ -73,7 +80,7 @@ public class OrderServiceImpl implements OrderService{
                 total+=totalItemPrice;
             }
 
-            orderDto.setTotal(total); //Set calculated bill totatl to the DTO
+            orderDto.setTotal(total); //Set calculated bill total to the DTO
             orderRepository.save(modelMapper.map(orderDto, Order.class)); //Call API for save the order
             itemMsgDto.setRSU_code(VarList.RSP_SUCCESS);
             return itemMsgDto;
@@ -81,7 +88,41 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderDto getOrderById(Long orderID) {
-        return null;
+    public OrderMsgDto fetchOrderById(Long cusId){
+        Order res = orderRepository.fetchOrderById(cusId);
+        if(res == null){
+            orderMsgDto.setRSU_CODE(VarList.RSP_NOT_EXIST);
+            return orderMsgDto;
+        }else{
+            orderMsgDto.setRSU_CODE(VarList.RSP_SUCCESS);
+            orderMsgDto.setOrderID(res.getOrderID());
+            orderMsgDto.setDate(res.getDate());
+            orderMsgDto.setTime(res.getTime());
+            orderMsgDto.setStatus(res.getStatus());
+            orderMsgDto.setTotal(res.getTotal());
+            orderMsgDto.setCustomerId(res.getCustomerId());
+
+            List<OrderMsgListDto> orderMsgListDtoList = new ArrayList<>();
+            List<OrderItem> orderItemList = res.getOrderItemList();
+            for(OrderItem orderItem : orderItemList){
+                final OrderMsgListDto orderMsgListDto = new OrderMsgListDto();
+
+                ResponseDto itemRes = restTemplate.getForObject((uri.inventoryUri()+"fetchItemNamePrice/"+ orderItem.getItemId().toString()), ResponseDto.class); //Fetch item name and price by itemID
+                ItemDto item = modelMapper.map(itemRes.getContent(), ItemDto.class);
+
+                orderMsgListDto.setItemId(orderItem.getOrderItemId());
+                orderMsgListDto.setItemName(item.getItem_name());
+                orderMsgListDto.setUnitPrice(item.getPrice());
+                orderMsgListDto.setQuantity(orderItem.getQuantity());
+                orderMsgListDto.setTotalPrice(orderItem.getItemPrice());
+
+
+                orderMsgListDtoList.add(orderMsgListDto);
+                System.out.println(orderMsgListDtoList);
+            }
+            System.out.println(orderMsgListDtoList);
+            orderMsgDto.setOrderMsgListDtoList(orderMsgListDtoList);
+            return orderMsgDto;
+        }
     }
 }
