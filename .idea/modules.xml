@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ShopNest.iml" filepath="$PROJECT_DIR$/.idea/ShopNest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/inventory/inventory (1).iml" filepath="$PROJECT_DIR$/backend/inventory/inventory (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/inventory (2).iml" filepath="$PROJECT_DIR$/backend/inventory (2).iml" />
     </modules>
   </component>
 </project>
