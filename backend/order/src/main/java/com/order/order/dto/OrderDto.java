@@ -21,5 +21,6 @@ public class OrderDto {
     private String status;
     private Double total;
     private Long customerId;
+    private Long dp_id;
     private List<OrderItem> orderItemList;
 }

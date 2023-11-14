@@ -7,6 +7,8 @@ import com.order.order.repository.OrderRepository;
 import com.order.order.util.Uri;
 import com.order.order.util.VarList;
 import jakarta.transaction.Transactional;
+import org.aspectj.weaver.ast.Or;
+import org.aspectj.weaver.ast.Var;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ public class OrderServiceImpl implements OrderService{
 
     double total=0.0;
 
+    //Add order
     @Override
     public ItemMsgDto addOrder(@NotNull OrderDto orderDto) {
 
@@ -87,13 +90,15 @@ public class OrderServiceImpl implements OrderService{
         }
     }
 
+    //Fetch order by order id
     @Override
-    public OrderMsgDto fetchOrderById(Long cusId){
-        Order res = orderRepository.fetchOrderById(cusId);
-        if(res == null){
+    public OrderMsgDto fetchOrderById(Long orderId){
+        Order res = orderRepository.fetchOrderById(orderId);
+        if(res == null){ //If order not available
             orderMsgDto.setRSU_CODE(VarList.RSP_NOT_EXIST);
             return orderMsgDto;
         }else{
+            //Set data to the response
             orderMsgDto.setRSU_CODE(VarList.RSP_SUCCESS);
             orderMsgDto.setOrderID(res.getOrderID());
             orderMsgDto.setDate(res.getDate());
@@ -101,7 +106,9 @@ public class OrderServiceImpl implements OrderService{
             orderMsgDto.setStatus(res.getStatus());
             orderMsgDto.setTotal(res.getTotal());
             orderMsgDto.setCustomerId(res.getCustomerId());
+            orderMsgDto.setDp_id(res.getDp_id());
 
+            //Get details of each item in the order
             List<OrderMsgListDto> orderMsgListDtoList = new ArrayList<>();
             List<OrderItem> orderItemList = res.getOrderItemList();
             for(OrderItem orderItem : orderItemList){
@@ -118,11 +125,52 @@ public class OrderServiceImpl implements OrderService{
 
 
                 orderMsgListDtoList.add(orderMsgListDto);
-                System.out.println(orderMsgListDtoList);
             }
-            System.out.println(orderMsgListDtoList);
             orderMsgDto.setOrderMsgListDtoList(orderMsgListDtoList);
             return orderMsgDto;
         }
+    }
+
+    //Fetch order by customer
+    @Override
+    public CusOrderMsgDto fetchOrderByCustomer(Long cusId){
+        ResponseDto res = restTemplate.getForObject((uri.userUri()+"fetchCustomerByID/"+ cusId), ResponseDto.class);
+        CusOrderMsgDto cusOrderMsgDto = new CusOrderMsgDto();
+        if(res.getCode().equals("02")){
+            cusOrderMsgDto.setRSU_Code(VarList.RSP_NOT_EXIST);
+            return cusOrderMsgDto;
+        }else if(res.getCode().equals("01")){
+            cusOrderMsgDto = modelMapper.map(res.getContent(), CusOrderMsgDto.class);
+            cusOrderMsgDto.setRSU_Code(VarList.RSP_SUCCESS);
+            List<Long> orderIdList = orderRepository.fetchOrderIdByCustomer(cusId);
+            List<OrderMsgDto> ordersList = new ArrayList<>();
+            for(Long orderId : orderIdList){
+                OrderMsgDto order = fetchOrderById(orderId);
+                ordersList.add(order);
+            }
+            cusOrderMsgDto.setOrderMsgDtos(ordersList);
+            return cusOrderMsgDto;
+        }else{
+            cusOrderMsgDto.setRSU_Code(VarList.RSP_ERROR);
+            return  cusOrderMsgDto;
+        }
+    }
+
+    //Assign delivery person
+    @Override
+    public String assignDeliveryPerson(Long orderId, Long dpId) {
+        Long isAssigned = orderRepository.checkAssignDeliverPerson(orderId);
+        if(isAssigned!=null){
+            return VarList.RSP_EXIST;
+        }else{
+            orderRepository.assignDeliveryPerson(orderId, dpId);
+            return VarList.RSP_SUCCESS;
+        }
+    }
+
+    //Fetch orders by delivery person
+    @Override
+    public List<Long> fetchOrdersByDp(Long dpId){
+        return orderRepository.fetchOrdersByDp(dpId);
     }
 }

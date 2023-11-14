@@ -19,5 +19,6 @@ public class OrderResDto {
     private String status;
     private Double total;
     private Long customerId;
+    private Long dp_id;
     private List<ItemDto> orderItemList;
 }

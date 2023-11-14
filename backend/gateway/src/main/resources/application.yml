@@ -1,0 +1,25 @@
+
+server:
+  port: 8080
+spring:
+  application:
+    name: API-GATEWAY-SERVICE
+  cloud:
+    gateway:
+        routes:
+          - id: USER-SERVICE
+            uri: http://localhost:8084
+            predicates:
+              - Path=/user/**
+          - id: INVENTORY-SERVICE
+            uri: http://localhost:8082
+            predicates:
+              - Path=/inventory/**
+          - id: ORDER-SERVICE
+            uri: http://localhost:8081
+            predicates:
+              - Path=/order/**
+          - id: DELIVERY-SERVICE
+            uri: http://localhost:8083
+            predicates:
+              - Path=/delivery/**

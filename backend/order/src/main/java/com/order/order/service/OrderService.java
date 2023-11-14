@@ -1,5 +1,6 @@
 package com.order.order.service;
 
+import com.order.order.dto.CusOrderMsgDto;
 import com.order.order.dto.ItemMsgDto;
 import com.order.order.dto.OrderDto;
 import com.order.order.dto.OrderMsgDto;
@@ -11,9 +12,14 @@ import java.util.List;
 
 @Service
 public interface OrderService {
-    public ItemMsgDto addOrder(OrderDto orderDto);
+    ItemMsgDto addOrder(OrderDto orderDto);
 
-    public OrderMsgDto fetchOrderById(Long cusId);
+    OrderMsgDto fetchOrderById(Long cusId);
 
+    CusOrderMsgDto fetchOrderByCustomer(Long cusId);
+
+    String assignDeliveryPerson(Long orderId, Long dpId);
+
+    List<Long> fetchOrdersByDp(Long dpId);
 }
 

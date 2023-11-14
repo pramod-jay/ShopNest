@@ -24,6 +24,7 @@ public class Order {
     private String status;
     private Double total;
     private Long customerId;
+    private Long dp_id;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
