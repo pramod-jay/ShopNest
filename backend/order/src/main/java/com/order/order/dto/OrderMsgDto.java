@@ -19,5 +19,6 @@ public class OrderMsgDto {
     private String status;
     private Double total;
     private Long customerId;
+    private Long dp_id;
     private List<OrderMsgListDto> orderMsgListDtoList;
 }

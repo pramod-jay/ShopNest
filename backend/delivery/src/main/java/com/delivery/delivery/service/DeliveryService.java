@@ -1,10 +1,21 @@
 package com.delivery.delivery.service;
 
-import com.delivery.delivery.entity.Delivery;
-import org.springframework.stereotype.Service;
+import com.delivery.delivery.dto.*;
 
-@Service
 public interface DeliveryService {
+    String addDeliveryPerson(DeliveryPersonDto deliveryPersonDto);
 
-    Delivery assignDelivery(Long dp_id, Long orderID);
+    DPWithoutPWDto fetchDeliveryPerByUname(String uName);
+
+    String updateStatus(Boolean Status, Long id);
+
+    String fetchAvailability(Long id);
+
+    AvailableDPersonDto fetchAvailablePersons();
+
+    String assignOrder(Long orderId, Long dpId);
+
+    CustomerMsgDto fetchOrders(Long dpId);
+
+    String deliveryLogin(CredentialsDto credentialsDto);
 }
